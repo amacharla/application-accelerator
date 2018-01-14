@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  web_app_v1:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: web_app:1.0
+    container_name: web_app_v1
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./web_app:/var/www/url_shortener/web_app
+      - ./config_files/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - ./config_files/nginx_site:/etc/nginx/sites-available/nginx_site
+      - ./config_files/uwsgi_config.ini:/var/www/url_shortener/web_app/uwsgi_config.ini
+    ports:
+      - "80:80"
+      - "3306:3306"
