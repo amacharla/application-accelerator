@@ -12,7 +12,7 @@ services:
     volumes:
       - ./config_files/dbsetup.sql:/docker-entrypoint-initdb.d/dbsetup.sql
       - ./config_files/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
-        #- ./mysql_data:/var/lib/mysql
+      - ./mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
 
@@ -36,12 +36,9 @@ services:
       dockerfile: dockerfile-app
     image: app-accelerator
     container_name: app_server
-    depends_on:
-      - nginx
-      - mysql
     links:
-      - mysql
       - nginx
+      - mysql
     volumes:
       - ./web_app:/web_app
     ports:
