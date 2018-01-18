@@ -7,7 +7,6 @@ services:
     container_name: db_server
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=url_db
       - MYSQL_LOG_CONSOLE=true
     volumes:
       - ./config_files/dbsetup.sql:/docker-entrypoint-initdb.d/dbsetup.sql
@@ -21,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile-nginx
-    image: nginx
+    image: amacharla/aa-nginx
     container_name: web_server
     volumes:
       - ./config_files/nginx_site.template:/etc/nginx/conf.d/nginx_site.template
@@ -34,7 +33,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile-app
-    image: app-accelerator
+    image: amacharla/app-accelerator
     container_name: app_server
     links:
       - nginx
@@ -42,5 +41,4 @@ services:
     volumes:
       - ./web_app:/web_app
     ports:
-      - "81:80"
       - "5001:5001"
