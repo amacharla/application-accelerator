@@ -1,0 +1,44 @@
+version: '2'
+
+services:
+  mysql:
+    restart: on-failure
+    image: amacharla/aa-mysql
+    build:
+      context: .
+      dockerfile: dockerfile-mysql
+    container_name: db_server
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_LOG_CONSOLE=true
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  nginx:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: dockerfile-nginx
+    image: amacharla/aa-nginx
+    container_name: web_server
+    volumes:
+      - ./web_app/static:/usr/share/nginx/html
+    ports:
+      - "80:80"
+
+  app-engine:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: dockerfile-app
+    image: amacharla/app-accelerator
+    container_name: app_server
+    links:
+      - nginx
+      - mysql
+    volumes:
+      - ./web_app:/web_app
+    ports:
+      - "5001:5001"
